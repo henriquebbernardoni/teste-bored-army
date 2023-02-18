@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
     private Transform _transform;
     private Camera _camera;
 
-    private Vector3 rotationSpeed = new(0f, 0f, 75f);
+    private float rotationSpeed = 75f;
     private float movementSpeed = 3f;
 
     private void Start()
@@ -28,7 +28,7 @@ public class PlayerMovement : MonoBehaviour
         {
             float axisValue = Input.GetAxisRaw("Horizontal");
 
-            _transform.Rotate(axisValue * Time.fixedDeltaTime * rotationSpeed);
+            _transform.Rotate(axisValue * Time.fixedDeltaTime * rotationSpeed * Vector3.forward);
         }
     }
 
@@ -39,6 +39,7 @@ public class PlayerMovement : MonoBehaviour
             if (!IsOnScreenBorder())
             {
                 _transform.Translate(Time.fixedDeltaTime * movementSpeed * Vector3.up);
+                //Debug.Log(Time.fixedDeltaTime * movementSpeed * Vector3.up);
             }
         }
     }

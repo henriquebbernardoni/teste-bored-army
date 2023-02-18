@@ -10,22 +10,19 @@ public class HealthController : MonoBehaviour
     [SerializeField] private Transform hpUI;
     private Image hpBar;
 
-    private int fullHP = 5000;
-    private int currentHP;
+    [SerializeField] private int fullHP = 5000;
+    [SerializeField] private int currentHP;
 
     private int previousHP;
     private Vector3 previousPos;
 
     private SpriteDisplayer spriteDisplayer;
 
-    private void Start()
+    private void Awake()
     {
         _main = Camera.main;
         hpBar = hpUI.Find("Bar").GetComponent<Image>();
         spriteDisplayer = GetComponent<SpriteDisplayer>();
-
-        currentHP = fullHP;
-        HPUpdate();
     }
 
     private void Update()
@@ -33,11 +30,6 @@ public class HealthController : MonoBehaviour
         if (previousHP != currentHP || previousPos != transform.position)
         {
             HPUpdate();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            currentHP -= 1500;
         }
     }
 
@@ -78,5 +70,11 @@ public class HealthController : MonoBehaviour
         previousPos = transform.position;
         spriteDisplayer.SetSprite(healthState);
         hpUI.gameObject.SetActive(isHPDisplayed);
+    }
+
+    public void RestoreHP()
+    {
+        currentHP = fullHP;
+        HPUpdate();
     }
 }
