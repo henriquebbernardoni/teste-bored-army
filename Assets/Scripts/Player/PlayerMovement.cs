@@ -10,7 +10,10 @@ public class PlayerMovement : MonoBehaviour
     private float rotationSpeed = 75f;
     private float movementSpeed = 3f;
 
-    private void Start()
+    //private bool isRotating;
+    //private int rotationDirection;
+
+    private void Awake()
     {
         _transform = transform;
         _camera = Camera.main;
@@ -26,7 +29,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetAxisRaw("Horizontal") != 0f)
         {
-            float axisValue = Input.GetAxisRaw("Horizontal");
+            float axisValue = -Input.GetAxisRaw("Horizontal");
 
             _transform.Rotate(axisValue * Time.fixedDeltaTime * rotationSpeed * Vector3.forward);
         }

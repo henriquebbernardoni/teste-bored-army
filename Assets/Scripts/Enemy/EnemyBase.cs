@@ -7,8 +7,8 @@ public class EnemyBase : BaseShip
 {
     protected Transform player;
 
-    private float movementSpeed = 1f;
-    private float rotationSpeed = 40f;
+    protected float movementSpeed = 1.75f;
+    protected float rotationSpeed = 40f;
 
     private NavMeshPath currentPath;
     private Vector3 currentCorner;
@@ -27,23 +27,13 @@ public class EnemyBase : BaseShip
         base.Start();
     }
 
-    protected void Update()
+    protected virtual void FixedUpdate()
     {
         EnemyBehavior();
     }
 
     protected virtual void EnemyBehavior()
     {
-    }
-
-    protected virtual void EnemyDeath()
-    {
-
-    }
-
-    protected override void RestoreShip()
-    {
-        base.RestoreShip();
     }
 
     //As funções a seguir emulam a movimentação do jogador como se fosse um agente de NavMesh.
@@ -61,7 +51,6 @@ public class EnemyBase : BaseShip
             transform.Rotate(Mathf.Sign(newAngle) * Time.fixedDeltaTime * rotationSpeed * Vector3.forward);
         }
     }
-
     protected void MoveToPlayer()
     {
         if(Vector3.Distance(transform.position, currentCorner) >= 0.5f)

@@ -6,23 +6,33 @@ public class BaseShip : MonoBehaviour
 {
     protected SpriteDisplayer displayer;
     protected HealthController health;
-
-    [SerializeField] protected SpriteDisplayer.ShipColor shipColor;
+    private Collider2D thisCollider;
+    
+    [SerializeField] protected int fullHPAmount = 5000;
+    protected SpriteDisplayer.ShipColor shipColor;
 
     protected virtual void Awake()
     {
         displayer = GetComponent<SpriteDisplayer>();
         health = GetComponent<HealthController>();
+        thisCollider = GetComponent<Collider2D>();
     }
 
     protected virtual void Start()
     {
         displayer.SetColor(shipColor);
+        health.SetFullHP(fullHPAmount);
         RestoreShip();
     }
 
-    protected virtual void RestoreShip()
+    public virtual void RestoreShip()
     {
         health.RestoreHP();
+        thisCollider.enabled = true;
+    }
+
+    public virtual void ShipDeath()
+    {
+        thisCollider.enabled = false;
     }
 }

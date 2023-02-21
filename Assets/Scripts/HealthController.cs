@@ -10,19 +10,21 @@ public class HealthController : MonoBehaviour
     [SerializeField] private Transform hpUI;
     private Image hpBar;
 
-    [SerializeField] private int fullHP = 5000;
+    [SerializeField] private int fullHP;
     [SerializeField] private int currentHP;
 
     private int previousHP;
     private Vector3 previousPos;
 
     private SpriteDisplayer spriteDisplayer;
+    private BaseShip controllerScript;
 
     private void Awake()
     {
         _main = Camera.main;
         hpBar = hpUI.Find("Bar").GetComponent<Image>();
         spriteDisplayer = GetComponent<SpriteDisplayer>();
+        controllerScript = GetComponent<BaseShip>();
     }
 
     private void Update()
@@ -61,6 +63,7 @@ public class HealthController : MonoBehaviour
         }
         else
         {
+            controllerScript.ShipDeath(); 
             hpBar.color = Color.red;
             healthState = SpriteDisplayer.ShipHealth.SUNK;
             isHPDisplayed = false;
@@ -75,6 +78,15 @@ public class HealthController : MonoBehaviour
     public void RestoreHP()
     {
         currentHP = fullHP;
-        HPUpdate();
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHP -= damage;
+    }
+
+    public void SetFullHP(int hp)
+    {
+        fullHP = hp;
     }
 }

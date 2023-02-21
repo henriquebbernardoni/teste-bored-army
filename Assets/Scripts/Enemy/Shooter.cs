@@ -2,15 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Chaser : EnemyBase
+public class Shooter : EnemyBase
 {
-    private enum ChaserStates { CHASING, DEACTIVATED }
+    private enum ChaserStates { CHASING, SHOOTING, DEACTIVATED }
     private ChaserStates currentState = ChaserStates.DEACTIVATED;
+
+    private CannonController cannonController;
+    private bool canShoot = true;
 
     protected override void Awake()
     {
         base.Awake();
-        shipColor = SpriteDisplayer.ShipColor.WHITE;
+        shipColor = SpriteDisplayer.ShipColor.BLACK;
+        fullHPAmount = 4000;
+
+        cannonController = GetComponent<CannonController>();
     }
 
     protected override void FixedUpdate()
@@ -30,6 +36,15 @@ public class Chaser : EnemyBase
             case ChaserStates.CHASING:
                 RotateToPlayer();
                 MoveToPlayer();
+
+                if (Vector3.Distance(transform.position, player.position) <= 5f
+                    && canShoot)
+                {
+                    StartCoroutine(Shoot());
+                }
+                break;
+            case ChaserStates.SHOOTING:
+                RotateToPlayer();
                 break;
             case ChaserStates.DEACTIVATED:
                 break;
@@ -50,13 +65,20 @@ public class Chaser : EnemyBase
         currentState = ChaserStates.DEACTIVATED;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private IEnumerator Shoot()
     {
-        if (currentState == ChaserStates.CHASING &&
-            collision.GetComponent<PlayerController>() != null)
-        {
-            collision.GetComponent<HealthController>().TakeDamage(2000);
-            health.TakeDamage(fullHPAmount);
-        }
+        currentState = ChaserStates.SHOOTING;
+        canShoot = false;
+        rotationSpeed = 75f;
+
+        yield return new WaitForSeconds(0.75f);
+
+        cannonController.FrontCannonLaunch();
+        currentState = ChaserStates.CHASING;
+        rotationSpeed = 40f;
+
+        yield return new WaitForSeconds(2f);
+
+        canShoot = true;
     }
 }
