@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    private PlayerController playerController;
+
     private Transform _transform;
     private Camera _camera;
 
@@ -15,14 +17,19 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
+        playerController = GetComponent<PlayerController>();
+
         _transform = transform;
         _camera = Camera.main;
     }
 
     private void FixedUpdate()
     {
-        Rotator();
-        Mover();
+        if (playerController.IsShipActive)
+        {
+            Rotator();
+            Mover();
+        }
     }
 
     private void Rotator()

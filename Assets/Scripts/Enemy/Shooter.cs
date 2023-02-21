@@ -34,10 +34,9 @@ public class Shooter : EnemyBase
         switch (currentState)
         {
             case ChaserStates.CHASING:
-                RotateToPlayer();
                 MoveToPlayer();
 
-                if (Vector3.Distance(transform.position, player.position) <= 5f
+                if (Vector3.Distance(transform.position, player.position) <= 4f
                     && canShoot)
                 {
                     StartCoroutine(Shoot());
@@ -67,17 +66,19 @@ public class Shooter : EnemyBase
 
     private IEnumerator Shoot()
     {
+        Agent.isStopped = true;
         currentState = ChaserStates.SHOOTING;
         canShoot = false;
-        rotationSpeed = 75f;
+        //rotationSpeed = 75f;
 
         yield return new WaitForSeconds(0.75f);
 
         cannonController.FrontCannonLaunch();
+        Agent.isStopped = false;
         currentState = ChaserStates.CHASING;
-        rotationSpeed = 40f;
+        //rotationSpeed = 40f;
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(3f);
 
         canShoot = true;
     }

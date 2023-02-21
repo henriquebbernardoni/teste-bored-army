@@ -89,4 +89,9 @@ public class HealthController : MonoBehaviour
     {
         fullHP = hp;
     }
+
+    public void SetHPBar(Transform hpUINew)
+    {
+        hpUI = hpUINew;
+    }
 }

@@ -28,7 +28,6 @@ public class Chaser : EnemyBase
         switch (currentState)
         {
             case ChaserStates.CHASING:
-                RotateToPlayer();
                 MoveToPlayer();
                 break;
             case ChaserStates.DEACTIVATED:
@@ -55,7 +54,7 @@ public class Chaser : EnemyBase
         if (currentState == ChaserStates.CHASING &&
             collision.GetComponent<PlayerController>() != null)
         {
-            collision.GetComponent<HealthController>().TakeDamage(2000);
+            collision.GetComponent<HealthController>().TakeDamage(3000);
             health.TakeDamage(fullHPAmount);
         }
     }

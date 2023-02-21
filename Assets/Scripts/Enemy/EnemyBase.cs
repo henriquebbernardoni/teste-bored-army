@@ -6,25 +6,31 @@ using UnityEngine.AI;
 public class EnemyBase : BaseShip
 {
     protected Transform player;
+    public NavMeshAgent Agent { get; private set; }
 
     protected float movementSpeed = 1.75f;
-    protected float rotationSpeed = 40f;
+    protected float rotationSpeed = 90f;
 
-    private NavMeshPath currentPath;
-    private Vector3 currentCorner;
+    private float enemyAgentDistance;
+    private Vector3 playerAgentPos;
     private Vector3 targetDirection;
     private float newAngle;
+
+    private Quaternion newRotation;
+    private Vector3 agentEuler;
 
     protected override void Awake()
     {
         base.Awake();
         player = FindObjectOfType<PlayerController>().transform;
-        currentPath = new NavMeshPath();
+        newRotation = Quaternion.Euler(Vector3.zero);
     }
 
     protected override void Start()
     {
         base.Start();
+        Agent.speed = movementSpeed;
+        Agent.angularSpeed = rotationSpeed;
     }
 
     protected virtual void FixedUpdate()
@@ -36,27 +42,56 @@ public class EnemyBase : BaseShip
     {
     }
 
-    //As funções a seguir emulam a movimentação do jogador como se fosse um agente de NavMesh.
-    //Após realizar um playtest e conferir que o NavMesh Agent não satisfaz às minhas necessidades,
-    //eu decidi criar minha própria versão do código que realiza a tarefa muito bem.
-    protected void RotateToPlayer()
+    public override void RestoreShip()
     {
-        NavMesh.CalculatePath(transform.position, player.position, NavMesh.AllAreas, currentPath);
-        currentCorner = currentPath.corners[1];
-        currentCorner.z = 0;
-        targetDirection = currentCorner - transform.position;
-        newAngle = Vector3.SignedAngle(transform.up, targetDirection, Vector3.forward);
-        if (Mathf.Abs(newAngle) >= 1f)
-        {
-            transform.Rotate(Mathf.Sign(newAngle) * Time.fixedDeltaTime * rotationSpeed * Vector3.forward);
-        }
+        base.RestoreShip();
+        Agent.enabled = true;
     }
+
+    public override void ShipDeath()
+    {
+        base.ShipDeath();
+        Agent.isStopped = true;
+        Agent.enabled = false;
+    }
+
     protected void MoveToPlayer()
     {
-        if(Vector3.Distance(transform.position, currentCorner) >= 0.5f)
+        if (IsShipActive)
         {
-            transform.Translate(Time.fixedDeltaTime * movementSpeed * Vector3.up);
-            //Debug.Log(Time.fixedDeltaTime * movementSpeed * Vector3.up);
+            enemyAgentDistance = Agent.transform.position.z - transform.position.z;
+            playerAgentPos = player.position + (enemyAgentDistance * Vector3.forward);
+
+            Agent.SetDestination(playerAgentPos);
+            transform.position = Agent.transform.position - (enemyAgentDistance * Vector3.forward);
+            agentEuler = Agent.transform.rotation.eulerAngles;
+
+            if (Agent.path.corners.Length > 1)
+            {
+                targetDirection = Agent.path.corners[1] - transform.position;
+                newAngle = Vector3.SignedAngle(transform.up, targetDirection, Vector3.forward);
+                if (Mathf.Abs(newAngle) >= 1f)
+                {
+                    transform.Rotate(Mathf.Sign(newAngle) * Time.fixedDeltaTime * rotationSpeed * Vector3.forward);
+                }
+            }
         }
+    }
+    protected void RotateToPlayer()
+    {
+        if (IsShipActive)
+        {
+            targetDirection = player.position - transform.position;
+            newAngle = Vector3.SignedAngle(transform.up, targetDirection, Vector3.forward);
+            if (Mathf.Abs(newAngle) >= 1f)
+            {
+                transform.Rotate(Mathf.Sign(newAngle) * Time.fixedDeltaTime * rotationSpeed * Vector3.forward);
+            }
+        }
+    }
+
+    public void SetUpAgent(NavMeshAgent newAgent)
+    {
+        Agent = newAgent;
     }
 }

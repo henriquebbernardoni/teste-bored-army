@@ -5,11 +5,13 @@ using UnityEngine;
 public class BaseShip : MonoBehaviour
 {
     protected SpriteDisplayer displayer;
-    protected HealthController health;
+    [SerializeField] protected HealthController health;
     private Collider2D thisCollider;
     
     [SerializeField] protected int fullHPAmount = 5000;
     protected SpriteDisplayer.ShipColor shipColor;
+
+    public bool IsShipActive { get; protected set; }
 
     protected virtual void Awake()
     {
@@ -29,10 +31,12 @@ public class BaseShip : MonoBehaviour
     {
         health.RestoreHP();
         thisCollider.enabled = true;
+        IsShipActive = true;
     }
 
     public virtual void ShipDeath()
     {
         thisCollider.enabled = false;
+        IsShipActive = false;
     }
 }
