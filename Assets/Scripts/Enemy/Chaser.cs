@@ -13,16 +13,6 @@ public class Chaser : EnemyBase
         shipColor = SpriteDisplayer.ShipColor.WHITE;
     }
 
-    protected override void FixedUpdate()
-    {
-        base.FixedUpdate();
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            RestoreShip();
-        }
-    }
-
     protected override void EnemyBehavior()
     {
         switch (currentState)

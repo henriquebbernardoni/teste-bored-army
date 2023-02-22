@@ -5,7 +5,8 @@ using UnityEngine;
 public class BaseShip : MonoBehaviour
 {
     protected SpriteDisplayer displayer;
-    [SerializeField] protected HealthController health;
+    protected HealthController health;
+    protected ShipAnimationControl animControl;
     private Collider2D thisCollider;
     
     [SerializeField] protected int fullHPAmount = 5000;
@@ -17,6 +18,7 @@ public class BaseShip : MonoBehaviour
     {
         displayer = GetComponent<SpriteDisplayer>();
         health = GetComponent<HealthController>();
+        animControl = GetComponentInChildren<ShipAnimationControl>();
         thisCollider = GetComponent<Collider2D>();
     }
 
@@ -38,5 +40,6 @@ public class BaseShip : MonoBehaviour
     {
         thisCollider.enabled = false;
         IsShipActive = false;
+        animControl.ShipDeathAnim();
     }
 }

@@ -19,16 +19,6 @@ public class Shooter : EnemyBase
         cannonController = GetComponent<CannonController>();
     }
 
-    protected override void FixedUpdate()
-    {
-        base.FixedUpdate();
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            RestoreShip();
-        }
-    }
-
     protected override void EnemyBehavior()
     {
         switch (currentState)
@@ -37,7 +27,7 @@ public class Shooter : EnemyBase
                 MoveToPlayer();
 
                 if (Vector3.Distance(transform.position, player.position) <= 4f
-                    && canShoot)
+                    && canShoot && Agent.enabled)
                 {
                     StartCoroutine(Shoot());
                 }
@@ -62,21 +52,28 @@ public class Shooter : EnemyBase
     {
         base.ShipDeath();
         currentState = ChaserStates.DEACTIVATED;
+        StopCoroutine(Shoot());
     }
 
     private IEnumerator Shoot()
     {
-        Agent.isStopped = true;
+        if (Agent.isOnNavMesh)
+            Agent.isStopped = true;
         currentState = ChaserStates.SHOOTING;
         canShoot = false;
-        //rotationSpeed = 75f;
 
         yield return new WaitForSeconds(0.75f);
 
+        if (!Agent.enabled)
+        {
+            currentState = ChaserStates.DEACTIVATED;
+            yield break;
+        }
+
         cannonController.FrontCannonLaunch();
-        Agent.isStopped = false;
+        if (Agent.isOnNavMesh)
+            Agent.isStopped = false;
         currentState = ChaserStates.CHASING;
-        //rotationSpeed = 40f;
 
         yield return new WaitForSeconds(3f);
 

@@ -65,11 +65,13 @@ public class SpriteDisplayer : MonoBehaviour
         if (newHealth == ShipHealth.SUNK)
         {
             shipSprite.color = transluscent;
+            shipSprite.sortingOrder = 2;
             otherSprites.gameObject.SetActive(false);
         }
         else
         {
             shipSprite.color = opaque;
+            shipSprite.sortingOrder = 3;
             otherSprites.gameObject.SetActive(true);
         }
     }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -11,9 +12,6 @@ public class PlayerMovement : MonoBehaviour
 
     private float rotationSpeed = 75f;
     private float movementSpeed = 3f;
-
-    //private bool isRotating;
-    //private int rotationDirection;
 
     private void Awake()
     {
@@ -30,6 +28,10 @@ public class PlayerMovement : MonoBehaviour
             Rotator();
             Mover();
         }
+
+        /*RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+        if (hit.collider)
+            Debug.Log(hit.collider.name);*/
     }
 
     private void Rotator()
@@ -46,26 +48,39 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetAxisRaw("Vertical") > 0f)
         {
-            if (!IsOnScreenBorder())
+            if (!IsOnScreenBorder() && !ObstacleDetector())
             {
                 _transform.Translate(Time.fixedDeltaTime * movementSpeed * Vector3.up);
-                //Debug.Log(Time.fixedDeltaTime * movementSpeed * Vector3.up);
             }
         }
     }
 
     private bool IsOnScreenBorder()
     {
-        bool result = false;
+        bool tempReturn = false;
         Vector3 bowPosition = _transform.position + _transform.up;
         Vector3 viewportVector = _camera.WorldToViewportPoint(bowPosition);
 
         if (viewportVector.x >= 1 || viewportVector.x <= 0 ||
             viewportVector.y >= 1 || viewportVector.y <= 0)
         {
-            result = true;
+            tempReturn = true;
         }
 
-        return result;
+        return tempReturn;
+    }
+
+    private bool ObstacleDetector()
+    {
+        bool tempReturn = false;
+        Vector3 bowPosition = _transform.position + _transform.up;
+
+        RaycastHit2D hit = Physics2D.Raycast(bowPosition, _transform.up, 1f);
+        if (hit.collider && hit.collider.GetComponent<Tilemap>())
+        {
+            tempReturn = true;
+        }
+
+        return tempReturn;
     }
 }

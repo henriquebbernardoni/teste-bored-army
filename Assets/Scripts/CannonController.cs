@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CannonController : MonoBehaviour
 {
+    private ShipAnimationControl animControl;
+
     private Transform frontCannon;
     private Transform[] leftCannons;
     private Transform[] rightCannons;
@@ -16,6 +18,8 @@ public class CannonController : MonoBehaviour
 
     private void Awake()
     {
+        animControl = GetComponentInChildren<ShipAnimationControl>();
+
         frontCannon = transform.Find("Sprites/Other/CannonFront");
         List<Transform> tempLeftList = new();
         List<Transform> tempRightList = new();
@@ -43,6 +47,8 @@ public class CannonController : MonoBehaviour
         frontCB.gameObject.SetActive(true);
         frontCB.transform.position = frontCannon.position;
         frontCB.velocity = transform.up * 10f;
+
+        animControl.FrontCannonAnim();
     }
 
     public void SideCannonsLaunch()
@@ -56,6 +62,9 @@ public class CannonController : MonoBehaviour
             rightCB.Add(FindFirstAvailableBall());
         }
 
+        if (leftCB.Count < leftCannons.Length || rightCB.Count < rightCannons.Length)
+            return;
+
         for (int i = 0; i < leftCannons.Length; i++)
         {
             leftCB[i].gameObject.SetActive(true);
@@ -66,6 +75,8 @@ public class CannonController : MonoBehaviour
             rightCB[i].transform.position = rightCannons[i].position;
             rightCB[i].velocity = transform.right * 10f;
         }
+
+        animControl.SideCannonAnim();
     }
 
     private Rigidbody2D FindFirstAvailableBall()

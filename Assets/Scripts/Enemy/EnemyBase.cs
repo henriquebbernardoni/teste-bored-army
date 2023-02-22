@@ -16,14 +16,10 @@ public class EnemyBase : BaseShip
     private Vector3 targetDirection;
     private float newAngle;
 
-    private Quaternion newRotation;
-    private Vector3 agentEuler;
-
     protected override void Awake()
     {
         base.Awake();
         player = FindObjectOfType<PlayerController>().transform;
-        newRotation = Quaternion.Euler(Vector3.zero);
     }
 
     protected override void Start()
@@ -46,6 +42,7 @@ public class EnemyBase : BaseShip
     {
         base.RestoreShip();
         Agent.enabled = true;
+        Agent.isStopped = false;
     }
 
     public override void ShipDeath()
@@ -64,7 +61,6 @@ public class EnemyBase : BaseShip
 
             Agent.SetDestination(playerAgentPos);
             transform.position = Agent.transform.position - (enemyAgentDistance * Vector3.forward);
-            agentEuler = Agent.transform.rotation.eulerAngles;
 
             if (Agent.path.corners.Length > 1)
             {

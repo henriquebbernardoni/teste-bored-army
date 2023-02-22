@@ -41,8 +41,9 @@ public class EnemyController : MonoBehaviour
             {
                 chosenEnemy.gameObject.SetActive(true);
             }
-            chosenEnemy.Agent.transform.position = chosenSpawnPoint.position;
-            chosenEnemy.Agent.isStopped = false;
+            //chosenEnemy.Agent.transform.position = chosenSpawnPoint.position;
+            NavMesh.SamplePosition(chosenSpawnPoint.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas);
+            chosenEnemy.Agent.transform.position = hit.position;
             chosenEnemy.transform.position = chosenSpawnPoint.position;
             chosenEnemy.transform.rotation = chosenSpawnPoint.rotation;
             chosenEnemy.RestoreShip();
