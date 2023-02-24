@@ -46,6 +46,7 @@ public class Chaser : EnemyBase
         {
             collision.GetComponent<HealthController>().TakeDamage(3000);
             health.TakeDamage(fullHPAmount);
+            gameController.AddScore(-750);
         }
     }
 }

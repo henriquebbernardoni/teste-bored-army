@@ -11,7 +11,7 @@ public class HealthController : MonoBehaviour
     private Image hpBar;
 
     [SerializeField] private int fullHP;
-    [SerializeField] private int currentHP;
+    public int CurrentHP { get; private set; }
 
     private int previousHP;
     private Vector3 previousPos;
@@ -29,7 +29,7 @@ public class HealthController : MonoBehaviour
 
     private void Update()
     {
-        if (previousHP != currentHP || previousPos != transform.position)
+        if (previousHP != CurrentHP || previousPos != transform.position)
         {
             HPUpdate();
         }
@@ -39,7 +39,7 @@ public class HealthController : MonoBehaviour
     private void HPUpdate()
     {
         Vector3 barPos = transform.position + 1.5f * Vector3.up;
-        float healthPercent = (float)currentHP / (float)fullHP;
+        float healthPercent = (float)CurrentHP / (float)fullHP;
         SpriteDisplayer.ShipHealth healthState;
         bool isHPDisplayed = true;
         
@@ -69,7 +69,7 @@ public class HealthController : MonoBehaviour
             isHPDisplayed = false;
         }
 
-        previousHP = currentHP;
+        previousHP = CurrentHP;
         previousPos = transform.position;
         spriteDisplayer.SetSprite(healthState);
         hpUI.gameObject.SetActive(isHPDisplayed);
@@ -77,12 +77,12 @@ public class HealthController : MonoBehaviour
 
     public void RestoreHP()
     {
-        currentHP = fullHP;
+        CurrentHP = fullHP;
     }
 
     public void TakeDamage(int damage)
     {
-        currentHP -= damage;
+        CurrentHP -= damage;
     }
 
     public void SetFullHP(int hp)

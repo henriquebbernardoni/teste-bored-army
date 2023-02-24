@@ -92,7 +92,8 @@ public class CannonController : MonoBehaviour
                 frontCB != tempRB && !leftCB.Contains(tempRB) && !rightCB.Contains(tempRB))
             {
                 tempReturn = tempRB;
-                cannonballs[i].SetLauncher(gameObject);
+                cannonballs[i].SetLauncherCannon(gameObject);
+                cannonballs[i].SetLauncherShip(GetComponent<BaseShip>());
                 break;
             }
         }

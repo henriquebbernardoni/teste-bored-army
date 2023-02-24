@@ -24,6 +24,7 @@ public class EnemyBase : BaseShip
 
     protected override void Start()
     {
+        settingsController = FindObjectOfType<SettingsController>();
         base.Start();
         Agent.speed = movementSpeed;
         Agent.angularSpeed = rotationSpeed;
@@ -41,15 +42,15 @@ public class EnemyBase : BaseShip
     public override void RestoreShip()
     {
         base.RestoreShip();
-        Agent.enabled = true;
-        Agent.isStopped = false;
+            Agent.enabled = true;
+            Agent.isStopped = false;
     }
 
     public override void ShipDeath()
     {
         base.ShipDeath();
-        Agent.isStopped = true;
-        Agent.enabled = false;
+            Agent.isStopped = true;
+            Agent.enabled = false;
     }
 
     protected void MoveToPlayer()

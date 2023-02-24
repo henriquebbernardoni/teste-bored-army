@@ -28,10 +28,6 @@ public class PlayerMovement : MonoBehaviour
             Rotator();
             Mover();
         }
-
-        /*RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-        if (hit.collider)
-            Debug.Log(hit.collider.name);*/
     }
 
     private void Rotator()

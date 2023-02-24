@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class BaseShip : MonoBehaviour
 {
+    protected SettingsController settingsController;
+    protected GameController gameController;
+
     protected SpriteDisplayer displayer;
     protected HealthController health;
     protected ShipAnimationControl animControl;
@@ -16,6 +19,7 @@ public class BaseShip : MonoBehaviour
 
     protected virtual void Awake()
     {
+        gameController = FindObjectOfType<GameController>();
         displayer = GetComponent<SpriteDisplayer>();
         health = GetComponent<HealthController>();
         animControl = GetComponentInChildren<ShipAnimationControl>();

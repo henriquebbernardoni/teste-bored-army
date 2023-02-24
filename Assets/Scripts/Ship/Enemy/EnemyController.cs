@@ -5,8 +5,8 @@ using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour
 {
-    Camera _camera;
-    PlayerController playerController;
+    private Camera _camera;
+    private SettingsController settingsController;
 
     [SerializeField] private EnemyBase[] enemies;
     [SerializeField] private Transform[] hpBars;
@@ -20,7 +20,6 @@ public class EnemyController : MonoBehaviour
     private void Awake()
     {
         _camera = Camera.main;
-        playerController = GetComponent<PlayerController>();
         SetUpSpawnPoints();
         SetUpEnemyAgents();
         SetUpHealthBars();
@@ -28,6 +27,8 @@ public class EnemyController : MonoBehaviour
 
     private void Start()
     {
+        settingsController = FindObjectOfType<SettingsController>();
+        spawnTime = settingsController.EnemySpawnTime;
         StartCoroutine(EnemySpawn(spawnTime));
     }
 
@@ -44,8 +45,7 @@ public class EnemyController : MonoBehaviour
             //chosenEnemy.Agent.transform.position = chosenSpawnPoint.position;
             NavMesh.SamplePosition(chosenSpawnPoint.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas);
             chosenEnemy.Agent.transform.position = hit.position;
-            chosenEnemy.transform.position = chosenSpawnPoint.position;
-            chosenEnemy.transform.rotation = chosenSpawnPoint.rotation;
+            chosenEnemy.transform.SetPositionAndRotation(chosenSpawnPoint.position, chosenSpawnPoint.rotation);
             chosenEnemy.RestoreShip();
             yield return new WaitForSeconds(spawnTime);
         }
